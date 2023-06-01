@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/betul/ME413/dealii/project/project_part1",
+  "command": "/usr/bin/c++  -DDEBUG -isystem /home/betul/ME413/dealii/include -isystem /home/betul/ME413/dealii/bundled/umfpack/UMFPACK/Include -isystem /home/betul/ME413/dealii/bundled/umfpack/AMD/Include -isystem /home/betul/ME413/dealii/bundled/kokkos-3.7.00/algorithms/src -isystem /home/betul/ME413/dealii/bundled/kokkos-3.7.00/containers/src -isystem /home/betul/ME413/dealii/bundled/kokkos-3.7.00/core/src -isystem /home/betul/ME413/dealii/bundled/kokkos-3.7.00/simd/src -isystem /home/betul/ME413/dealii/bundled/kokkos-3.7.00/tpls/desul/include -isystem /home/betul/ME413/dealii/bundled/muparser_v2_3_3/include    -pedantic -Wall -Wextra -Wmissing-braces -Woverloaded-virtual -Wpointer-arith -Wsign-compare -Wsuggest-override -Wswitch -Wsynth -Wwrite-strings -Wno-placement-new -Wno-deprecated-declarations -Wno-literal-suffix -Wno-psabi -Wno-class-memaccess -Wno-unused-local-typedefs -fopenmp-simd -pthread -O0 -ggdb -Wa,--compress-debug-sections -o CMakeFiles/proj.dir/proj.cc.o -c /home/betul/ME413/dealii/project/project_part1/proj.cc",
+  "file": "/home/betul/ME413/dealii/project/project_part1/proj.cc"
+}
+]
