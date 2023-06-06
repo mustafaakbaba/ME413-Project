@@ -40,7 +40,7 @@
 #include <deal.II/grid/grid_out.h>
 #include <deal.II/grid/grid_in.h>
 #include <map>
- 
+#include <deal.II/numerics/derivative_approximation.h>
 #include <deal.II/numerics/data_out.h>
 #include <fstream>
 #include <iostream>
@@ -258,51 +258,17 @@ void part2o1<dim>::solve()
             << " CG iterations needed to obtain convergence." << std::endl;
 }
  
- //function for computing gradient 
-template <int dim>
-class GradientPostprocessor : public DataPostprocessorVector<dim>
-{
-public:
-  GradientPostprocessor ()
-    :
-    // call the constructor of the base class. call the variable to
-    // be output "grad_u" and make sure that DataOut provides us
-    // with the gradients:
-    DataPostprocessorVector<dim> ("grad_u",
-                                  update_gradients)
-  {}
  
-  virtual
-  void
-  evaluate_scalar_field
-  (const DataPostprocessorInputs::Scalar<dim> &input_data,
-   std::vector<Vector<double> > &computed_quantities) const override
-  {
-    // ensure that there really are as many output slots
-    // as there are points at which DataOut provides the
-    // gradients:
-    AssertDimension (input_data.solution_gradients.size(),
-                     computed_quantities.size());
- 
-    // then loop over all of these inputs:
-    for (unsigned int p=0; p<input_data.solution_gradients.size(); ++p)
-      {
-        // ensure that each output slot has exactly 'dim'
-        // components (as should be expected, given that we
-        // want to create vector-valued outputs), and copy the
-        // gradients of the solution at the evaluation points
-        // into the output slots:
-        AssertDimension (computed_quantities[p].size(), dim);
-        for (unsigned int d=0; d<dim; ++d)
-          computed_quantities[p][d]
-            = input_data.solution_gradients[p][d];
-      }
-  } 
- };
+
+
  
  
- 
- 
+float rho = 1.2; //density of air
+float p_inf = 101.325*1000;
+float velocitysq = 1;
+float vel_x = 0; float vel_y = 0;
+float velocity_infsq = 1;
+ int ii = 0;
 template <int dim>
 void part2o1<dim>::output_results() const
 {
@@ -316,20 +282,24 @@ void part2o1<dim>::output_results() const
   std::ofstream output("solution.vtk");
   data_out.write_vtk(output);
   
-  //calculate gradients
-  /*GradientPostprocessor<dim> gradient_postprocessor;
+  //calculate pressure  
+  DataOut<dim> pressure_data;
+  Vector<float> speed(triangulation.n_active_cells());
+  Vector<float> pressure(triangulation.n_active_cells());
+  DerivativeApproximation::approximate_gradient(dof_handler, solution, speed, 0);
   
-  DataOut<dim> graddata_out;
-  graddata_out.attach_dof_handler (dof_handler);
-  graddata_out.add_data_vector (solution, "solution");
-  graddata_out.add_data_vector (solution, gradient_postprocessor);
-  graddata_out.build_patches ();
-  std::cout << "   grad: " << graddata_out
-            << std::endl;
-   
-  std::ofstream gradoutput("solution.vtu");
-  graddata_out.write_vtu(gradoutput);*/
+  while(ii<triangulation.n_active_cells()) {
+    pressure[ii] = rho/2*velocity_infsq - rho/2*std::pow(speed[ii],2);
+    ii++;
+  }
   
+  pressure_data.attach_dof_handler(dof_handler);
+  pressure_data.add_data_vector(pressure, "pressure");
+  pressure_data.build_patches();
+  std::ofstream output2("pressure.vtu");
+  pressure_data.write_vtu(output2);
+  
+  //std::cout << "grad " << triangulation.n_active_cells()     << std::endl;
   
 }
  
