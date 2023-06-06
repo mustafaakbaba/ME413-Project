@@ -1,0 +1,10 @@
+/home/betul/ME413/dealii/project/proj/part2o1/CMakeFiles/rebuild_cache.dir
+/home/betul/ME413/dealii/project/proj/part2o1/CMakeFiles/info.dir
+/home/betul/ME413/dealii/project/proj/part2o1/CMakeFiles/edit_cache.dir
+/home/betul/ME413/dealii/project/proj/part2o1/CMakeFiles/strip_comments.dir
+/home/betul/ME413/dealii/project/proj/part2o1/CMakeFiles/distclean.dir
+/home/betul/ME413/dealii/project/proj/part2o1/CMakeFiles/runclean.dir
+/home/betul/ME413/dealii/project/proj/part2o1/CMakeFiles/release.dir
+/home/betul/ME413/dealii/project/proj/part2o1/CMakeFiles/debug.dir
+/home/betul/ME413/dealii/project/proj/part2o1/CMakeFiles/run.dir
+/home/betul/ME413/dealii/project/proj/part2o1/CMakeFiles/part2o1.dir

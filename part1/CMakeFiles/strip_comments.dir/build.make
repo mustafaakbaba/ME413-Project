@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/betul/ME413/dealii/project/project_part1
+CMAKE_SOURCE_DIR = /home/betul/ME413/dealii/project/proj/part1
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/betul/ME413/dealii/project/project_part1
+CMAKE_BINARY_DIR = /home/betul/ME413/dealii/project/proj/part1
 
 # Utility rule file for strip_comments.
 
@@ -54,7 +54,7 @@ CMAKE_BINARY_DIR = /home/betul/ME413/dealii/project/project_part1
 include CMakeFiles/strip_comments.dir/progress.make
 
 CMakeFiles/strip_comments:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/betul/ME413/dealii/project/project_part1/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "strip comments"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/betul/ME413/dealii/project/proj/part1/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "strip comments"
 	/usr/bin/perl -pi -e 's#^[ \t]*//.*\n##g;' proj.cc
 
 strip_comments: CMakeFiles/strip_comments
@@ -72,6 +72,6 @@ CMakeFiles/strip_comments.dir/clean:
 .PHONY : CMakeFiles/strip_comments.dir/clean
 
 CMakeFiles/strip_comments.dir/depend:
-	cd /home/betul/ME413/dealii/project/project_part1 && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/betul/ME413/dealii/project/project_part1 /home/betul/ME413/dealii/project/project_part1 /home/betul/ME413/dealii/project/project_part1 /home/betul/ME413/dealii/project/project_part1 /home/betul/ME413/dealii/project/project_part1/CMakeFiles/strip_comments.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/betul/ME413/dealii/project/proj/part1 && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/betul/ME413/dealii/project/proj/part1 /home/betul/ME413/dealii/project/proj/part1 /home/betul/ME413/dealii/project/proj/part1 /home/betul/ME413/dealii/project/proj/part1 /home/betul/ME413/dealii/project/proj/part1/CMakeFiles/strip_comments.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/strip_comments.dir/depend
 

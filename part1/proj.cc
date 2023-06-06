@@ -36,12 +36,13 @@
 #include <deal.II/lac/dynamic_sparsity_pattern.h>
 #include <deal.II/lac/solver_cg.h>
 #include <deal.II/lac/precondition.h>
- 
+ #include <deal.II/grid/grid_out.h>
 #include <deal.II/numerics/data_out.h>
 #include <fstream>
 #include <iostream>
- 
+#include <deal.II/base/timer.h>
 #include <deal.II/base/logstream.h>
+#include <deal.II/dofs/dof_renumbering.h> 
  
 using namespace dealii;
  
@@ -56,6 +57,7 @@ public:
 private:
   void make_grid();
   void setup_system();
+  void setup_system_renumber();
   void assemble_system();
   void solve();
   void output_results() const;
@@ -110,9 +112,9 @@ template <int dim>
 double BoundaryValues<dim>::value(const Point<dim> &p,
                                   const unsigned int /*component*/) const
 {
-    if((std::pow(p(0), 2.0)+std::pow(p(1), 2.0)-std::pow(0.25, 2.0)) <1e-6 ) return 50;
-    if((std::pow(p(0), 2.0)+std::pow(p(1), 2.0)-std::pow(2, 2.0)) < 1e-6 ) return 0;
-    //return 0;
+    if((std::pow(p(0), 2.0)+std::pow(p(1), 2.0)-std::pow(0.25, 2.0)) <1e-2 ) return 50;
+    if((std::pow(p(0), 2.0)+std::pow(p(1), 2.0)-std::pow(2, 2.0)) < 1e-2 ) return 0;
+    return 0;
 }
  
  
@@ -136,12 +138,16 @@ void Part1<dim>::make_grid()
   const double   inner_radius = 0.25, outer_radius = 2.0;
   const double rot_angle = 3.14159265358979323846/2;
   GridGenerator::half_hyper_shell(
-    triangulation, center, inner_radius, outer_radius, 10);
-  triangulation.refine_global(4);
+    triangulation, center, inner_radius, outer_radius, 10); //change the last parameter for adjusting the mesh
+  triangulation.refine_global(4); //change the last parameter for adjusting the mesh
   GridTools::rotate(rot_angle, triangulation); 	
   
   std::cout << "Number of active cells: " << triangulation.n_active_cells()
             << std::endl;
+            
+  std::ofstream out("grid1.svg");
+  GridOut gridout;
+  gridout.write_svg(triangulation, out);
 }
  
  
@@ -156,8 +162,33 @@ void Part1<dim>::setup_system()
   DynamicSparsityPattern dsp(dof_handler.n_dofs());
   DoFTools::make_sparsity_pattern(dof_handler, dsp);
   sparsity_pattern.copy_from(dsp);
- 
   system_matrix.reinit(sparsity_pattern);
+  
+  std::ofstream out("sparsity-pattern-1.svg");
+  sparsity_pattern.print_svg(out);
+
+ 
+  solution.reinit(dof_handler.n_dofs());
+  system_rhs.reinit(dof_handler.n_dofs());
+}
+
+template <int dim>
+void Part1<dim>::setup_system_renumber()
+{
+  dof_handler.distribute_dofs(fe);
+ 
+  std::cout << "   Number of degrees of freedom: " << dof_handler.n_dofs()
+            << std::endl;
+  DoFRenumbering::Cuthill_McKee(dof_handler);
+ 
+  DynamicSparsityPattern dsp(dof_handler.n_dofs());
+  DoFTools::make_sparsity_pattern(dof_handler, dsp);
+  sparsity_pattern.copy_from(dsp);
+  system_matrix.reinit(sparsity_pattern);
+  
+  std::ofstream out("sparsity-pattern-2.svg");
+  sparsity_pattern.print_svg(out);
+
  
   solution.reinit(dof_handler.n_dofs());
   system_rhs.reinit(dof_handler.n_dofs());
@@ -168,7 +199,8 @@ void Part1<dim>::setup_system()
 template <int dim>
 void Part1<dim>::assemble_system()
 {
-  QGauss<dim> quadrature_formula(fe.degree + 1);
+  QGauss<dim> quadrature_formula(fe.degree+1); //adapt order of gauss quadrature formula
+ 
  
   RightHandSide<dim> right_hand_side;
  
@@ -268,6 +300,7 @@ void Part1<dim>::run()
  
   make_grid();
   setup_system();
+  //setup_system_renumber();//uncomment the above line or this line in order to have reordering matrices
   assemble_system();
   solve();
   output_results();
@@ -277,11 +310,17 @@ void Part1<dim>::run()
  
 int main()
 {
-  {
-    Part1<2> laplace_problem_2d;
-    laplace_problem_2d.run();
-  }
+  Timer timer; // creating a timer also starts it
+  Part1<2> laplace_problem_2d;
+  laplace_problem_2d.run();
+  timer.stop();
  
+  std::cout << "Elapsed CPU time: " << timer.cpu_time() << " seconds.\n";
+  std::cout << "Elapsed wall time: " << timer.wall_time() << " seconds.\n";
+   
+  // reset timer for the next thing it shall do
+  timer.reset();
+   
 
  
   return 0;

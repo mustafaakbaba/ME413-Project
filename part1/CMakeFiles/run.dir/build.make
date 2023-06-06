@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/betul/ME413/dealii/project/project_part1
+CMAKE_SOURCE_DIR = /home/betul/ME413/dealii/project/proj/part1
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/betul/ME413/dealii/project/project_part1
+CMAKE_BINARY_DIR = /home/betul/ME413/dealii/project/proj/part1
 
 # Utility rule file for run.
 
@@ -54,7 +54,7 @@ CMAKE_BINARY_DIR = /home/betul/ME413/dealii/project/project_part1
 include CMakeFiles/run.dir/progress.make
 
 CMakeFiles/run: proj
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/betul/ME413/dealii/project/project_part1/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Run proj with Debug configuration"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/betul/ME413/dealii/project/proj/part1/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Run proj with Debug configuration"
 	./proj
 
 run: CMakeFiles/run
@@ -72,6 +72,6 @@ CMakeFiles/run.dir/clean:
 .PHONY : CMakeFiles/run.dir/clean
 
 CMakeFiles/run.dir/depend:
-	cd /home/betul/ME413/dealii/project/project_part1 && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/betul/ME413/dealii/project/project_part1 /home/betul/ME413/dealii/project/project_part1 /home/betul/ME413/dealii/project/project_part1 /home/betul/ME413/dealii/project/project_part1 /home/betul/ME413/dealii/project/project_part1/CMakeFiles/run.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/betul/ME413/dealii/project/proj/part1 && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/betul/ME413/dealii/project/proj/part1 /home/betul/ME413/dealii/project/proj/part1 /home/betul/ME413/dealii/project/proj/part1 /home/betul/ME413/dealii/project/proj/part1 /home/betul/ME413/dealii/project/proj/part1/CMakeFiles/run.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/run.dir/depend
 

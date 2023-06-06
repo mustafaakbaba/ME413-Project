@@ -1,4 +1,4 @@
-# Install script for directory: /home/betul/ME413/dealii/project/project_part1
+# Install script for directory: /home/betul/ME413/dealii/project/proj/part1
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/betul/ME413/dealii/project/project_part1/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/betul/ME413/dealii/project/proj/part1/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
