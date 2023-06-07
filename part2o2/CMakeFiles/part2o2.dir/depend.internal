@@ -411,6 +411,7 @@ CMakeFiles/part2o2.dir/part2o2.cc.o
  /home/betul/ME413/dealii/include/deal.II/numerics/data_out.h
  /home/betul/ME413/dealii/include/deal.II/numerics/data_out_dof_data.h
  /home/betul/ME413/dealii/include/deal.II/numerics/data_postprocessor.h
+ /home/betul/ME413/dealii/include/deal.II/numerics/derivative_approximation.h
  /home/betul/ME413/dealii/include/deal.II/numerics/matrix_creator.h
  /home/betul/ME413/dealii/include/deal.II/numerics/matrix_tools.h
  /home/betul/ME413/dealii/include/deal.II/numerics/rtree.h

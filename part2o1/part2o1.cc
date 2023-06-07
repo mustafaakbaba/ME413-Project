@@ -144,7 +144,7 @@ void part2o1<dim>::make_grid()
 {
     GridIn<dim> grid_in;
   grid_in.attach_triangulation(triangulation);
-  std::ifstream input_file("cylinderf.msh");
+  std::ifstream input_file("cylinder.msh"); // in order to change the mesh, change this line
   Assert(dim == 2, ExcInternalError());
   
  
@@ -250,7 +250,7 @@ void part2o1<dim>::assemble_system()
 template <int dim>
 void part2o1<dim>::solve()
 {
-  SolverControl            solver_control(1000, 1e-12);
+  SolverControl            solver_control(10000, 1e-12);
   SolverCG<Vector<double>> solver(solver_control);
   solver.solve(system_matrix, solution, system_rhs, PreconditionIdentity());
  

@@ -40,7 +40,7 @@
 #include <deal.II/grid/grid_out.h>
 #include <deal.II/grid/grid_in.h>
 #include <map>
- 
+#include <deal.II/numerics/derivative_approximation.h>
 #include <deal.II/numerics/data_out.h>
 #include <fstream>
 #include <iostream>
@@ -51,10 +51,10 @@ using namespace dealii;
  
  
 template <int dim>
-class part2o2
+class part2o1
 {
 public:
-  part2o2();
+  part2o1();
   void run();
  
 private:
@@ -130,7 +130,7 @@ double BoundaryValues<dim>::value(const Point<dim> &p,
  
  
 template <int dim>
-part2o2<dim>::part2o2()
+part2o1<dim>::part2o1()
   : fe(1)
   , dof_handler(triangulation)
 {}
@@ -140,11 +140,11 @@ part2o2<dim>::part2o2()
 
  
 template <int dim>
-void part2o2<dim>::make_grid()
+void part2o1<dim>::make_grid()
 {
     GridIn<dim> grid_in;
   grid_in.attach_triangulation(triangulation);
-  std::ifstream input_file("s2048.msh");
+  std::ifstream input_file("s2048.msh"); // in order to change the mesh, change this line
   Assert(dim == 2, ExcInternalError());
   
  
@@ -154,7 +154,7 @@ void part2o2<dim>::make_grid()
   triangulation.set_all_manifold_ids_on_boundary(0);
   triangulation.set_manifold(0, boundary);*/
   
-  std::ofstream out("grid_airfoil.svg");
+  std::ofstream out("grid_arifoil.svg");
   GridOut gridout;
   gridout.write_svg(triangulation, out);
  
@@ -163,7 +163,7 @@ void part2o2<dim>::make_grid()
  
  
 template <int dim>
-void part2o2<dim>::setup_system()
+void part2o1<dim>::setup_system()
 {
   dof_handler.distribute_dofs(fe);
  
@@ -183,7 +183,7 @@ void part2o2<dim>::setup_system()
  
  
 template <int dim>
-void part2o2<dim>::assemble_system()
+void part2o1<dim>::assemble_system()
 {
   QGauss<dim> quadrature_formula(fe.degree + 1);
  
@@ -248,9 +248,9 @@ void part2o2<dim>::assemble_system()
  
  
 template <int dim>
-void part2o2<dim>::solve()
+void part2o1<dim>::solve()
 {
-  SolverControl            solver_control(1000, 1e-12);
+  SolverControl            solver_control(10000, 1e-12);
   SolverCG<Vector<double>> solver(solver_control);
   solver.solve(system_matrix, solution, system_rhs, PreconditionIdentity());
  
@@ -258,53 +258,19 @@ void part2o2<dim>::solve()
             << " CG iterations needed to obtain convergence." << std::endl;
 }
  
- //function for computing gradient 
+ 
+
+
+ 
+ 
+float rho = 1.2; //density of air
+float p_inf = 101.325*1000;
+float velocitysq = 1;
+float vel_x = 0; float vel_y = 0;
+float velocity_infsq = 1;
+ int ii = 0;
 template <int dim>
-class GradientPostprocessor : public DataPostprocessorVector<dim>
-{
-public:
-  GradientPostprocessor ()
-    :
-    // call the constructor of the base class. call the variable to
-    // be output "grad_u" and make sure that DataOut provides us
-    // with the gradients:
-    DataPostprocessorVector<dim> ("grad_u",
-                                  update_gradients)
-  {}
- 
-  virtual
-  void
-  evaluate_scalar_field
-  (const DataPostprocessorInputs::Scalar<dim> &input_data,
-   std::vector<Vector<double> > &computed_quantities) const override
-  {
-    // ensure that there really are as many output slots
-    // as there are points at which DataOut provides the
-    // gradients:
-    AssertDimension (input_data.solution_gradients.size(),
-                     computed_quantities.size());
- 
-    // then loop over all of these inputs:
-    for (unsigned int p=0; p<input_data.solution_gradients.size(); ++p)
-      {
-        // ensure that each output slot has exactly 'dim'
-        // components (as should be expected, given that we
-        // want to create vector-valued outputs), and copy the
-        // gradients of the solution at the evaluation points
-        // into the output slots:
-        AssertDimension (computed_quantities[p].size(), dim);
-        for (unsigned int d=0; d<dim; ++d)
-          computed_quantities[p][d]
-            = input_data.solution_gradients[p][d];
-      }
-  } 
- };
- 
- 
- 
- 
-template <int dim>
-void part2o2<dim>::output_results() const
+void part2o1<dim>::output_results() const
 {
   DataOut<dim> data_out;
  
@@ -316,20 +282,24 @@ void part2o2<dim>::output_results() const
   std::ofstream output("solution.vtk");
   data_out.write_vtk(output);
   
-  //calculate gradients
-  /*GradientPostprocessor<dim> gradient_postprocessor;
+  //calculate pressure  
+  DataOut<dim> pressure_data;
+  Vector<float> speed(triangulation.n_active_cells());
+  Vector<float> pressure(triangulation.n_active_cells());
+  DerivativeApproximation::approximate_gradient(dof_handler, solution, speed, 0);
   
-  DataOut<dim> graddata_out;
-  graddata_out.attach_dof_handler (dof_handler);
-  graddata_out.add_data_vector (solution, "solution");
-  graddata_out.add_data_vector (solution, gradient_postprocessor);
-  graddata_out.build_patches ();
-  std::cout << "   grad: " << graddata_out
-            << std::endl;
-   
-  std::ofstream gradoutput("solution.vtu");
-  graddata_out.write_vtu(gradoutput);*/
+  while(ii<triangulation.n_active_cells()) {
+    pressure[ii] = rho/2*velocity_infsq - rho/2*std::pow(speed[ii],2);
+    ii++;
+  }
   
+  pressure_data.attach_dof_handler(dof_handler);
+  pressure_data.add_data_vector(pressure, "pressure");
+  pressure_data.build_patches();
+  std::ofstream output2("pressure.vtu");
+  pressure_data.write_vtu(output2);
+  
+  //std::cout << "grad " << triangulation.n_active_cells()     << std::endl;
   
 }
  
@@ -337,7 +307,7 @@ void part2o2<dim>::output_results() const
  
  
 template <int dim>
-void part2o2<dim>::run()
+void part2o1<dim>::run()
 {
   std::cout << "Solving problem in " << dim << " space dimensions."
             << std::endl;
@@ -354,7 +324,7 @@ void part2o2<dim>::run()
 int main()
 {
   
-    part2o2<2> laplace_problem_2d;
+    part2o1<2> laplace_problem_2d;
     laplace_problem_2d.run();
     //grid_1();
  

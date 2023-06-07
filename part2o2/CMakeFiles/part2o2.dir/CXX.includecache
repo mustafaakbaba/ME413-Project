@@ -5580,6 +5580,28 @@ string
 vector
 -
 
+/home/betul/ME413/dealii/include/deal.II/numerics/derivative_approximation.h
+deal.II/base/config.h
+-
+deal.II/base/exceptions.h
+-
+deal.II/base/synchronous_iterator.h
+-
+deal.II/dofs/dof_handler.h
+-
+deal.II/fe/fe_update_flags.h
+-
+deal.II/fe/mapping.h
+-
+deal.II/grid/filtered_iterator.h
+-
+deal.II/lac/vector.h
+-
+deal.II/dofs/dof_accessor.h
+-
+utility
+-
+
 /home/betul/ME413/dealii/include/deal.II/numerics/matrix_creator.h
 deal.II/base/config.h
 -
@@ -5788,6 +5810,8 @@ deal.II/grid/grid_out.h
 deal.II/grid/grid_in.h
 -
 map
+-
+deal.II/numerics/derivative_approximation.h
 -
 deal.II/numerics/data_out.h
 -
