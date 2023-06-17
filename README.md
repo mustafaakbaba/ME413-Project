@@ -5,6 +5,6 @@ In order to run the files, copy the folders on the dealII library path. Then, de
 ```
 cmake .
 make
-./$ $
+./$ name of the output of the make file $
 ```
 
